@@ -91,17 +91,20 @@ GOOGLE_API_KEY=your_api_key_here
 streamlit run app.py
 ```
 ## 🔍 Workflow Diagram
+
+```mermaid
 graph TD
-    A[Document Upload] --> B[Text Extraction]
-    B --> C[Chunk Splitting]
-    C --> D[Vector Embedding]
-    D --> E[FAISS Storage]
-    E --> F{User Interaction}
-    F --> G[Question Answering]
-    F --> H[Knowledge Validation]
-    G --> I[Response Generation]
-    H --> J[Question Creation]
-    J --> K[Answer Evaluation]
+    A[📂 Document Upload] --> B[📝 Text Extraction]
+    B --> C[🔗 Chunk Splitting]
+    C --> D[🔍 Vector Embedding]
+    D --> E[🗂️ FAISS Storage]
+    E --> F{🤖 User Interaction}
+    F --> G[💬 Question Answering]
+    F --> H[🧠 Knowledge Validation]
+    G --> I[📝 Response Generation]
+    H --> J[❓ Question Creation]
+    J --> K[✅ Answer Evaluation]
+```
 
 
 
