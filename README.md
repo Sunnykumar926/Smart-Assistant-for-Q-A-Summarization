@@ -72,14 +72,12 @@ This project was developed as part of a GenAI recruitment task to build an **AI-
 git clone https://github.com/yourusername/smart-assistant-genai.git
 cd smart-assistant-genai
 ```
-
 2. Create virtual environment:
 ```bash
 python -m venv my_env
 source my_env/bin/activate  # Linux/MacOS
 my_env\Scripts\activate    # Windows
 ```
-
 3. Install dependencies:
 ```bash
 pip install -r requirements.txt
@@ -92,11 +90,18 @@ GOOGLE_API_KEY=your_api_key_here
 ```bash
 streamlit run app.py
 ```
-
-
-
-
-
+## 🔍 Workflow Diagram
+graph TD
+    A[Document Upload] --> B[Text Extraction]
+    B --> C[Chunk Splitting]
+    C --> D[Vector Embedding]
+    D --> E[FAISS Storage]
+    E --> F{User Interaction}
+    F --> G[Question Answering]
+    F --> H[Knowledge Validation]
+    G --> I[Response Generation]
+    H --> J[Question Creation]
+    J --> K[Answer Evaluation]
 
 
 
