@@ -67,9 +67,43 @@ This project was developed as part of a GenAI recruitment task to build an **AI-
 - Google Gemini API Key (add to `.env` as `GOOGLE_API_KEY`)
 
 ### 🔧 Setup
-
+1. Clone repository:
 ```bash
 git clone https://github.com/yourusername/smart-assistant-genai.git
 cd smart-assistant-genai
+```
+
+2. Create virtual environment:
+```bash
+python -m venv my_env
+source my_env/bin/activate  # Linux/MacOS
+my_env\Scripts\activate    # Windows
+```
+
+3. Install dependencies:
+```bash
 pip install -r requirements.txt
+```
+4. Create `.env` file with your API key:
+```bash
+GOOGLE_API_KEY=your_api_key_here
+```
+5. Run your file
+```bash
 streamlit run app.py
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
