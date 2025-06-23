@@ -3,7 +3,7 @@
 
 ## 🎥 Demo Video
 
-[![Watch the demo](https://cdn.loom.com/sessions/thumbnails/a3797fb69e784d4790203161815aedff-with-play.gif)](https://www.loom.com/share/a3797fb69e784d4790203161815aedff)
+[![Watch the demo](https://www.loom.com/share/a3797fb69e784d4790203161815aedff)]
 
 A **Streamlit-based GenAI application** that reads and understands content from user-uploaded `.pdf` and `.txt` files. It provides **contextual question answering**, **logic-based question generation**, and **source-grounded feedback**, powered by **Google Gemini 1.5** via LangChain.
 
