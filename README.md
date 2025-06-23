@@ -76,7 +76,6 @@ This project was built as part of a **GenAI recruitment challenge** by **EZLab**
 1. Clone repository:
 ```bash
 git clone https://github.com/Sunnykumar926/Smart-Assistant-for-Research-Summarization
-cd smart-assistant-genai
 ```
 2. Create virtual environment:
 ```bash
