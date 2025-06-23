@@ -2,7 +2,7 @@
 
 ## 🎥 Demo Video
 
-[▶️ Watch the Demo on Loom](https://www.loom.com/share/a3797fb69e784d4790203161815aedff)
+[▶️ Watch the Demo on Loom](https://www.loom.com/share/dd866b89c51846cda52649326029a408)
 
 A **Streamlit-based GenAI assistant** that reads and understands content from `.pdf` and `.txt` documents. It performs **contextual Q&A**, **logic-based question generation**, and **source-grounded evaluation**, powered by **Google Gemini 1.5 Flash** and **LangChain**.
 
