@@ -10,7 +10,8 @@ from PyPDF2.errors import PdfReadError
 from langchain.vectorstores import FAISS
 from langchain.memory import ConversationBufferMemory
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain.chains.question_answering import load_qa_chain
+# from langchain.chains.question_answering import load_qa_chain
+from langchain.chains import ConversationalRetrievalChain
 from langchain.prompts import PromptTemplate
 from langchain.schema import Document
 
@@ -149,33 +150,36 @@ def get_conversational_chain():
     """
 
     model = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.3)
-    memory= ConversationBufferMemory(memory_key="chat_history", input_key="question")
-
-    prompt = PromptTemplate(template = prompt_template, input_variables = ["context", "question","chat_history"])
-    chain = load_qa_chain(
-        model, 
-        chain_type="stuff", 
-        prompt=prompt,
-        memory=memory
+    memory = ConversationBufferMemory(
+        memory_key="chat_history", 
+        return_messages=True,
+        output_key='answer'  # Set output_key here instead
     )
 
-    return chain
+    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    vectorstore = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
+    retriever = vectorstore.as_retriever()
+
+    qa_chain = ConversationalRetrievalChain.from_llm(
+        llm=model,
+        retriever=retriever,
+        memory=memory,
+        return_source_documents=True,
+        combine_docs_chain_kwargs={"prompt": PromptTemplate.from_template(prompt_template)}
+    )
+    return qa_chain
 
 
 def user_input(user_question):
-    embeddings = GoogleGenerativeAIEmbeddings(model = "models/embedding-001")
-    
-    new_db = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
-    docs = new_db.similarity_search(user_question)
-
     chain = get_conversational_chain()
     
     response = chain(
-        {"input_documents":docs, "question": user_question},
+        {"question": user_question},
         return_only_outputs=True
     )
     
-    output_text = response['output_text']
+    output_text = response['answer']
+    source_docs = response.get('source_documents', [])
     
     # Check if the model couldn't find the answer in the documents
     not_found_phrases = [
@@ -191,19 +195,19 @@ def user_input(user_question):
     # Format the response
     st.markdown(f"💬 **Reply:** \n\n{output_text}")
 
-    # Show sources only if we have them AND the answer was found in documents
-    if docs and not answer_not_found:
+    # Show sources from the response
+    if source_docs and not answer_not_found:
         used_sources = set()
-        for doc in docs:
+        for doc in source_docs:
             source_info = doc.metadata["source"]
             used_sources.add(source_info)
-        st.markdown("📚 **Source(s):** " + sorted(used_sources)[0])
+        st.markdown("📚 **Source(s):** " + ", ".join(sorted(used_sources)))
     else:
         st.markdown("ℹ️ No specific sources referenced in this answer")
 
 # -------------------- PAGE CONFIG -------------
 
-st.set_page_config(page_title='Smart Assistantkshfgkshfg', page_icon='kfgksgf🤖', layout='wide')
+st.set_page_config(page_title='Smart Assistant', page_icon='kfgksgf🤖', layout='wide')
 if 'current_docs_hash' not in st.session_state:
     st.session_state.current_docs_hash = None\
 
@@ -232,18 +236,31 @@ with st.container():
 if selected == 'About':
     st.markdown("## 📄 Document-Aware GenAI Assistant")
     st.markdown("""
-                It goes beyond simple automation by building an assistant that:
-                - 🧠 **Understands** document content  
-                - 🔍 **Infers** answers from context  
-                - ❓ **Generates logic-based questions**  
-                - 📑 **Justifies every response with references**
+    **Unlock the power of your documents** with our intelligent assistant that understands, reasons, and explains content like never before. 
+    Go beyond simple keyword searches with AI that comprehends context, relationships, and logical implications within your documents.
+                
+    ### 🧠 Core Capabilities:
+    - **Deep Document Understanding**: Extract meaning from complex PDFs and text files  
+    - **Contextual Question Answering**: Get precise answers with source references  
+    - **Intelligent Knowledge Checks**: Automatically generate comprehension questions  
+    - **Critical Thinking Enhancement**: Evaluate answers against document content  
+    - **Multi-document Analysis**: Connect insights across multiple files  
+                
+    ### ⚙️ How It Works:
+    1. **Upload** your PDFs or text documents  
+    2. **Process** to build an AI-understandable knowledge base  
+    3. **Ask questions** in natural language  
+    4. **Test knowledge** with automatically generated challenges  
+    5. **Receive feedback** with document-grounded explanations  
+                
+    *Built with Google Gemini AI for advanced reasoning and Streamlit for intuitive interaction*
 
-                ### 🛠 Applications:
-                - Legal document assistance  
-                - Research paper analysis  
-                - Educational tutoring and quiz generation  
-                - Interview prep and logical reasoning practice
+    ---
+    © 2025 Sunny Kumar. All rights reserved.
     """)
+
+    
+
 
 if selected == 'Question Answering':
     st.title("🔍 Document Processing Center")
@@ -311,46 +328,60 @@ if selected == 'Check Knowledge':
     # Initialize session state keys
     if 'challenge_questions' not in st.session_state:
         st.session_state.challenge_questions = None
-    if 'challenge_contexts' not in st.session_state:  # Changed to store contexts per question
+    if 'challenge_contexts' not in st.session_state:
         st.session_state.challenge_contexts = None
     if 'challenge_sources' not in st.session_state:
         st.session_state.challenge_sources = None
     if 'generation_count' not in st.session_state:
-        st.session_state.generation_count = 0  # Track generation cycles
+        st.session_state.generation_count = 0
+    if 'all_chunks' not in st.session_state:
+        st.session_state.all_chunks = []  # Store all document chunks
+    if 'used_chunks' not in st.session_state:
+        st.session_state.used_chunks = set()  # Track which chunks have been used
 
     if "docs_processed" not in st.session_state:
         st.warning("Please upload and process documents in the 'Question Answering' section first.")
     else:
+        # Initialize chunks if not already done
+        if not st.session_state.all_chunks:
+            raw_documents = get_pdf_text(st.session_state.pdf_docs)
+            text_chunks = get_text_chunks(raw_documents)
+            st.session_state.all_chunks = text_chunks
+            st.session_state.used_chunks = set()
+
         # Always show the generate button
         if st.button("Generate New Questions"):
             with st.spinner("Creating new questions from your documents..."):
-                raw_documents = get_pdf_text(st.session_state.pdf_docs)
-                text_chunks = get_text_chunks(raw_documents)
+                # Get available chunks (not used yet)
+                available_chunks = [
+                    chunk for idx, chunk in enumerate(st.session_state.all_chunks)
+                    if idx not in st.session_state.used_chunks
+                ]
                 
-                # Select random chunks from different documents
-                document_chunks = {}
-                for chunk in text_chunks:
-                    source = chunk.metadata.get('source', 'unknown')
-                    if source not in document_chunks:
-                        document_chunks[source] = []
-                    document_chunks[source].append(chunk)
+                # If not enough available, reset used chunks
+                if len(available_chunks) < 3:
+                    st.info("Reusing document content to create new questions")
+                    st.session_state.used_chunks = set()
+                    available_chunks = st.session_state.all_chunks
                 
-                # Select one random chunk from each document
+                # Randomly select 3 chunks from available chunks
+                selected_chunks = random.sample(available_chunks, min(3, len(available_chunks)))
+                
+                # Mark selected chunks as used
+                for chunk in selected_chunks:
+                    chunk_idx = st.session_state.all_chunks.index(chunk)
+                    st.session_state.used_chunks.add(chunk_idx)
+                
                 contexts = []
                 sources_used = set()
-                for source, chunks in document_chunks.items():
-                    if chunks:
-                        random_chunk = random.choice(chunks)
-                        filename = os.path.basename(source)
-                        contexts.append({
-                            "source": filename,
-                            "content": random_chunk.page_content[:2000]
-                        })
-                        sources_used.add(filename)
-
-                # If we have less than 3 documents, duplicate some
-                while len(contexts) < 3 and contexts:
-                    contexts.append(random.choice(contexts))
+                for chunk in selected_chunks:
+                    source = chunk.metadata.get('source', 'unknown')
+                    filename = os.path.basename(source)
+                    contexts.append({
+                        "source": filename,
+                        "content": chunk.page_content[:2000]
+                    })
+                    sources_used.add(filename)
                 
                 st.session_state.challenge_contexts = contexts
                 st.session_state.challenge_sources = sources_used
@@ -380,13 +411,6 @@ if selected == 'Check Knowledge':
                     except Exception as e:
                         st.error(f"Failed to generate question: {str(e)}")
                         questions.append("Question generation failed")
-                
-                # Ensure we have exactly 3 questions
-                if len(questions) > 3:
-                    questions = questions[:3]
-                elif len(questions) < 3:
-                    # Fill with placeholder questions if needed
-                    questions.extend(["Question not available"] * (3 - len(questions)))
                 
                 st.session_state.challenge_questions = questions
                 st.session_state.generation_count += 1
