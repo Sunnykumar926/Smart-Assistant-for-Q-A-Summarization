@@ -1,66 +1,67 @@
 # 🤖 Smart Assistant for Research Summarization
 
-
 ## 🎥 Demo Video
 
-[Click here to watch the Loom video](https://www.loom.com/share/a3797fb69e784d4790203161815aedff)
+[▶️ Watch the Demo on Loom](https://www.loom.com/share/a3797fb69e784d4790203161815aedff)
 
-A **Streamlit-based GenAI application** that reads and understands content from user-uploaded `.pdf` and `.txt` files. It provides **contextual question answering**, **logic-based question generation**, and **source-grounded feedback**, powered by **Google Gemini 1.5** via LangChain.
+A **Streamlit-based GenAI assistant** that reads and understands content from `.pdf` and `.txt` documents. It performs **contextual Q&A**, **logic-based question generation**, and **source-grounded evaluation**, powered by **Google Gemini 1.5 Flash** and **LangChain**.
 
-📁 Upload research papers, legal documents, or technical reports — let the assistant read, reason, and quiz you!
+> 📁 Upload research papers, legal documents, or technical reports — let the assistant read, reason, and quiz you!
 
 ---
 
 ## 🎯 Project Objective
 
-This project was developed as part of a GenAI recruitment task to build an **AI-powered assistant** that:
+This project was built as part of a **GenAI recruitment challenge** by **EZLab**, aiming to develop an AI-powered assistant capable of:
 
-- **Understands** complex documents
-- **Answers** free-form user questions with supporting evidence
-- **Generates** logic-based questions to test comprehension
-- **Evaluates** answers with contextual feedback
-- **Justifies** all outputs with references from the document
+- 📚 Understanding complex documents  
+- ❓ Answering free-form questions with citations  
+- 🧠 Generating logic-based questions for users  
+- ✅ Evaluating user answers with constructive feedback  
+- 🔍 Justifying all responses using document-grounded evidence  
 
 ---
 
-## 🚀 Features
+## 🚀 Key Features
 
-- 📄 **Document Upload**: Accepts `.pdf` and `.txt` files for analysis.
-- ✍️ **Auto Summary**: Instantly generates a <150 word summary per document.
-- 🧠 **Ask Anything**: Ask detailed questions; the assistant answers with quotes from the document.
-- 🎯 **Challenge Me Mode**:
-  - Auto-generates logic-based questions from document content
-  - Lets users attempt answers
-  - Evaluates and justifies with reference-backed feedback
-- 🔍 **Document Grounding**: Every response is traceable to its source — no hallucination.
+- 📄 **Multi-format Upload**: Accepts `.pdf` and `.txt` files  
+- ✍️ **Auto-Summarization**: Concise <150-word summary per document  
+- 💬 **Ask Anything**: Conversational Q&A with supporting quotes  
+- 🧠 **Challenge Mode**:  
+  - Generates logic/reasoning-based questions  
+  - Evaluates answers and provides feedback  
+- 📚 **Document Grounding**: Every answer includes exact sources; no hallucinations  
 
 ---
 
 ## 🧠 How It Works
 
 ### 📝 Document Parsing
-- Uses **PyPDF2** and UTF-8 decoding to extract structured content.
-- Groups content by document name and page number for traceability.
+- Uses **PyPDF2** and UTF-8 decoding to extract structured content  
+- Retains page numbers and source names for traceability  
 
-### 🔍 Vector Store
-- Documents are chunked using `RecursiveCharacterTextSplitter`.
-- Stored locally using **FAISS** and **Google GenerativeAI Embeddings**.
+### 🔍 Vector Store Creation
+- Uses `RecursiveCharacterTextSplitter` for efficient chunking  
+- Embeds chunks using **Google GenerativeAI Embeddings**  
+- Stores vectors locally using **FAISS**  
 
-### 💬 Q&A + Feedback Pipeline
-- Uses **LangChain** with `ChatGoogleGenerativeAI` (Gemini 1.5 Flash).
-- Custom prompts ensure grounded, accurate, and referenced responses.
-- User answers are evaluated with a structured rubric and source citations.
+### 💬 Q&A & Feedback Loop
+- Uses `ChatGoogleGenerativeAI` (Gemini 1.5 Flash) via LangChain  
+- Employs a structured prompt for grounded Q&A  
+- Evaluates user answers with rubric-based criteria (accuracy, completeness, citation)  
 
 ---
 
 ## 🏗️ Tech Stack
 
-- **Streamlit** – Interactive web UI
-- **LangChain** – Chain-based Q&A and prompt engineering
-- **Google Gemini 1.5** – LLM backend (via `langchain-google-genai`)
-- **FAISS** – Local vector storage and semantic retrieval
-- **PyPDF2** – PDF parsing
-- **dotenv** – Environment variable management
+| Layer         | Technology Used                         |
+|---------------|------------------------------------------|
+| UI            | Streamlit                                |
+| LLM Backend   | Google Gemini 1.5 Flash (`langchain-google-genai`) |
+| Vector Store  | FAISS                                     |
+| Parsing       | PyPDF2, UTF-8 Decoding                   |
+| Environment   | `python-dotenv`                          |
+| Chaining Logic| LangChain                                |
 
 ---
 
