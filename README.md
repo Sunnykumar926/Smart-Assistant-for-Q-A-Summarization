@@ -75,7 +75,7 @@ This project was built as part of a **GenAI recruitment challenge** by **EZLab**
 ### 🔧 Setup
 1. Clone repository:
 ```bash
-git clone https://github.com/yourusername/smart-assistant-genai.git
+git clone https://github.com/Sunnykumar926/Smart-Assistant-for-Research-Summarization
 cd smart-assistant-genai
 ```
 2. Create virtual environment:
@@ -111,7 +111,17 @@ graph TD
     H --> J[❓ Question Creation]
     J --> K[✅ Answer Evaluation]
 ```
+---
+## 👨‍💻 Author
 
+**Sunny Kumar**  
+✨ Developed for EZLab's GenAI task
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
 
 
 
