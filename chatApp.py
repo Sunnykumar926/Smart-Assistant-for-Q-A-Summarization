@@ -207,9 +207,9 @@ def user_input(user_question):
 
 # -------------------- PAGE CONFIG -------------
 
-st.set_page_config(page_title='Smart Assistant', page_icon='kfgksgf🤖', layout='wide')
+st.set_page_config(page_title='Smart Assistant', page_icon='🤖', layout='wide')
 if 'current_docs_hash' not in st.session_state:
-    st.session_state.current_docs_hash = None\
+    st.session_state.current_docs_hash = None
 
 if 'memory_initialized' not in st.session_state:
     st.session_state.memory_initialized=False 
