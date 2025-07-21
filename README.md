@@ -1,4 +1,4 @@
-# 🤖 Smart Assistant for Research Summarization
+# 🤖 Smart Assistant for Q&A and Summarization
 
 ## 🎥 Demo Video
 
