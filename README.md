@@ -112,9 +112,7 @@ graph TD
 ```
 ---
 ## 👨‍💻 Author
-
 **Sunny Kumar**  
-✨ Developed for EZLab's GenAI task
 
 
 
