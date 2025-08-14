@@ -12,7 +12,7 @@ A **Streamlit-based GenAI assistant** that reads and understands content from `.
 
 ## 🎯 Project Objective
 
-This project was built as part of a **GenAI recruitment challenge** by **EZLab**, aiming to develop an AI-powered assistant capable of:
+This project was built as part of a **GenAI challenge**, aiming to develop an AI-powered assistant capable of:
 
 - 📚 Understanding complex documents  
 - ❓ Answering free-form questions with citations  
